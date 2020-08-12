@@ -6,3 +6,4 @@ protoc greet/greetpb/greet.proto --go_out=plugins=grpc:.
 
 https://stackoverflow.com/questions/57700860/protoc-gen-go-program-not-found-or-is-not-executable
 
+protoc calculator/calculatorpb/calculator.proto --go_out=plugins=grpc:.
