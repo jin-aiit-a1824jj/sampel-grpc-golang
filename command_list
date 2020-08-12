@@ -1,0 +1,5 @@
+go get -u google.golang.org/grpc
+go get -u github.com/golang/protobuf/protoc-gen-go
+
+https://stackoverflow.com/questions/57700860/protoc-gen-go-program-not-found-or-is-not-executable
+
