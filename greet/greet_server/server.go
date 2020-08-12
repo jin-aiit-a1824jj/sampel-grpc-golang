@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strconv"
 
 	"../greetpb"
 
@@ -14,11 +15,24 @@ import (
 type server struct{}
 
 func (*server) Greet(ctx context.Context, req *greetpb.GreetRequest) (*greetpb.GreetResponse, error) {
-	fmt.Printf("Greet function wa invoked with %v\n", req)
+	fmt.Printf("Greet function was invoked with %v\n", req)
 	firstName := req.GetGreeting().GetFirstName()
 	result := "Hello " + firstName
 	res := &greetpb.GreetResponse{
 		Result: result,
+	}
+	return res, nil
+}
+
+func (*server) Calculate(ctx context.Context, req *greetpb.CalculatorRequest) (*greetpb.CalculatorResponse, error) {
+	fmt.Printf("Calculate function was invoked with %v\n", req)
+	firstNumber := req.GetCalculator().GetFirstNumber()
+	secondNumber := req.GetCalculator().GetSecondNumber()
+	result := "Calculate -> " + strconv.FormatInt(firstNumber, 10) + " + " + strconv.FormatInt(secondNumber, 10) + " = " + strconv.FormatInt(firstNumber+secondNumber, 10)
+	fmt.Printf("result-> %v", result)
+	res := &greetpb.CalculatorResponse{
+		Result:      result,
+		ResultInt64: firstNumber + secondNumber,
 	}
 	return res, nil
 }

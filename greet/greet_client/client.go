@@ -21,6 +21,7 @@ func main() {
 	// fmt.Printf("Creted client:%f", c)
 
 	doUnary(c)
+	doUnaryExercise(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -35,4 +36,18 @@ func doUnary(c greetpb.GreetServiceClient) {
 		log.Fatalf("error while calling Greet RPC: %v", err)
 	}
 	log.Printf("Response from Greet: %v", res.Result)
+}
+
+func doUnaryExercise(c greetpb.GreetServiceClient) {
+	req := &greetpb.CalculatorRequest{
+		Calculator: &greetpb.Calculator{
+			FirstNumber:  3.0,
+			SecondNumber: 10.0,
+		},
+	}
+	res, err := c.Calculate(context.Background(), req)
+	if err != nil {
+		log.Fatalf("error while calling Calculate RPC: %v", err)
+	}
+	log.Printf("Response from Calculate: %s", res.Result)
 }
