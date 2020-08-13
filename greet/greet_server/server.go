@@ -52,6 +52,26 @@ func (*server) GreetManyTimes(req *greetpb.GreetManyTimesRequest, stream greetpb
 	return nil
 }
 
+func (*server) PrimeNumber(req *greetpb.PrimeNumberRequest, stream greetpb.GreetService_PrimeNumberServer) error {
+	fmt.Printf("PrimeNumber function was invoked with %v\n", req)
+	n := req.GetNumber()
+	k := int32(2)
+	for i := 0; n > 1; i++ {
+		if n%k == 0 {
+			result := strconv.Itoa(i) + " -> [" + strconv.Itoa(int(k)) + "]"
+			n = n / k
+			res := &greetpb.PrimeNumberResponse{
+				Result: result,
+			}
+			stream.Send(res)
+			//time.Sleep(1000 * time.Millisecond)
+		} else {
+			k = k + 1
+		}
+	}
+	return nil
+}
+
 func main() {
 	fmt.Println("Hello World")
 

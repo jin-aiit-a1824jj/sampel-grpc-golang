@@ -24,6 +24,7 @@ func main() {
 	//doUnary(c)
 	//doUnaryExercise(c)
 	doServerStreaming(c)
+	doServerStreamingExercise(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -79,4 +80,27 @@ func doServerStreaming(c greetpb.GreetServiceClient) {
 		log.Printf("Responese from GreetManyTimes: %v\n", msg.GetResult())
 	}
 
+}
+
+func doServerStreamingExercise(c greetpb.GreetServiceClient) {
+	fmt.Printf("Starting to do a Server Streaming Exercise RPC...")
+
+	req := &greetpb.PrimeNumberRequest{
+		Number: int32(120),
+	}
+	resStream, err := c.PrimeNumber(context.Background(), req)
+	if err != nil {
+		log.Fatalf("error while calling PrimeNumber RPC: %v", err)
+	}
+	for {
+		msg, err := resStream.Recv()
+		if err == io.EOF {
+			// we've reached the end of the stream
+			break
+		}
+		if err != nil {
+			log.Fatalf("error while calling PrimeNumber RPC: %v", err)
+		}
+		log.Printf("Responese from PrimeNumber: %v\n", msg.GetResult())
+	}
 }

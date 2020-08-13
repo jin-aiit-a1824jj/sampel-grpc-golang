@@ -38,6 +38,14 @@ message GreetManytimesResponse {
     string result = 1;
 }
 
+message PrimeNumberRequest {
+    int32 number = 1;
+}
+
+message PrimeNumberResponse {
+    string result = 1;
+}
+
 service GreetService{
     // Unary
     rpc Greet(GreetRequest) returns (GreetResponse){};
@@ -47,4 +55,8 @@ service GreetService{
 
     // Server Streaming
     rpc GreetManyTimes(GreetManyTimesRequest) returns (stream GreetManytimesResponse){};
+
+    // Server Streaming - exercise
+    rpc PrimeNumber(PrimeNumberRequest) returns (stream PrimeNumberResponse){};
+
 }
