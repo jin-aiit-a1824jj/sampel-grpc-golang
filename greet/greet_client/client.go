@@ -27,6 +27,7 @@ func main() {
 	//doServerStreaming(c)
 	//doServerStreamingExercise(c)
 	doClientStreaming(c)
+	doClientStreamingExercise(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -155,4 +156,41 @@ func doClientStreaming(c greetpb.GreetServiceClient) {
 		log.Fatalf("error while receiving from LongGreet %v", err)
 	}
 	fmt.Printf("LongGreet Response: %v\n", res)
+}
+
+func doClientStreamingExercise(c greetpb.GreetServiceClient) {
+	fmt.Printf("Starting to do a Client Streaming RPC...\n")
+
+	request := []*greetpb.ComputeAverageRequest{
+		&greetpb.ComputeAverageRequest{
+			Number: 1,
+		},
+		&greetpb.ComputeAverageRequest{
+			Number: 2,
+		},
+		&greetpb.ComputeAverageRequest{
+			Number: 3,
+		},
+		&greetpb.ComputeAverageRequest{
+			Number: 4,
+		},
+	}
+
+	stream, err := c.ComputeAverage(context.Background())
+	if err != nil {
+		log.Fatalf("error while calling ComputeAverage: %v", err)
+	}
+
+	// we iterate over our slice and send each message individually
+	for _, req := range request {
+		fmt.Printf("Sending req: %v\n", req)
+		stream.Send(req)
+		//time.Sleep(100 * time.Millisecond)
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("error while receiving from ComputeAverage %v", err)
+	}
+	fmt.Printf("ComputeAverage Response: %v\n", res)
 }

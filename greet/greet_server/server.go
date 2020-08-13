@@ -94,6 +94,26 @@ func (*server) LongGreet(stream greetpb.GreetService_LongGreetServer) error {
 	}
 }
 
+func (*server) ComputeAverage(stream greetpb.GreetService_ComputeAverageServer) error {
+	fmt.Println("ComputeAverage function was invoked with a streaming request")
+
+	result := int64(0)
+	for i := 0; ; i++ {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			// we have finished reading the cliend stream
+			return stream.SendAndClose(&greetpb.ComputeAverageResponse{
+				Result: "result -> " + strconv.FormatFloat(float64(int(result))/float64(i), 'f', 2, 64),
+			})
+		}
+		if err != nil {
+			log.Fatalf("Error while reading cliend stream: %v", err)
+		}
+		result += req.GetNumber()
+	}
+
+}
+
 func main() {
 	fmt.Println("Hello World")
 
