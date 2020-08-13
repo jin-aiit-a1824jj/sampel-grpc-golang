@@ -74,7 +74,7 @@ func (*server) PrimeNumber(req *greetpb.PrimeNumberRequest, stream greetpb.Greet
 }
 
 func (*server) LongGreet(stream greetpb.GreetService_LongGreetServer) error {
-	fmt.Printf("LongGreet function was invoked with a streaming request")
+	fmt.Println("LongGreet function was invoked with a streaming request")
 
 	result := ""
 	for {
