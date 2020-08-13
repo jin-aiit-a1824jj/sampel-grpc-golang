@@ -26,8 +26,9 @@ func main() {
 	//doUnaryExercise(c)
 	//doServerStreaming(c)
 	//doServerStreamingExercise(c)
-	doClientStreaming(c)
-	doClientStreamingExercise(c)
+	//doClientStreaming(c)
+	//doClientStreamingExercise(c)
+	doBiDiStreaming(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -193,4 +194,76 @@ func doClientStreamingExercise(c greetpb.GreetServiceClient) {
 		log.Fatalf("error while receiving from ComputeAverage %v", err)
 	}
 	fmt.Printf("ComputeAverage Response: %v\n", res)
+}
+
+func doBiDiStreaming(c greetpb.GreetServiceClient) {
+	fmt.Printf("Starting to do a BiDi Streaming RPC...\n")
+
+	// we create a stream by invoking the client
+	stream, err := c.GreetEveryone(context.Background())
+	if err != nil {
+		log.Fatalf("Error while create stream: %v", err)
+		return
+	}
+
+	request := []*greetpb.GreetEveryoneRequest{
+		&greetpb.GreetEveryoneRequest{
+			Greeting: &greetpb.Greeting{
+				FirstName: "FirstName - 1",
+			},
+		},
+		&greetpb.GreetEveryoneRequest{
+			Greeting: &greetpb.Greeting{
+				FirstName: "FirstName - 2",
+			},
+		},
+		&greetpb.GreetEveryoneRequest{
+			Greeting: &greetpb.Greeting{
+				FirstName: "FirstName - 3",
+			},
+		},
+		&greetpb.GreetEveryoneRequest{
+			Greeting: &greetpb.Greeting{
+				FirstName: "FirstName - 4",
+			},
+		},
+		&greetpb.GreetEveryoneRequest{
+			Greeting: &greetpb.Greeting{
+				FirstName: "FirstName - 5",
+			},
+		},
+	}
+
+	waitc := make(chan struct{})
+
+	//we send a bunch of message to the client (go routine)
+	go func() {
+		// function to send a bunch of message
+		for _, req := range request {
+			fmt.Printf("Sending message: %v\n", req)
+			stream.Send(req)
+			time.Sleep(1000 * time.Millisecond)
+		}
+		stream.CloseSend()
+	}()
+
+	// we receive a bunch of messsages from the client (go routine)
+	go func() {
+		// function to receive a bunch of message
+		for {
+			res, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("Error while receiving: %v", err)
+				break
+			}
+			fmt.Printf("Received: %v\n", res.GetResult())
+		}
+		close(waitc)
+	}()
+
+	// block until everything is done
+	<-waitc
 }
