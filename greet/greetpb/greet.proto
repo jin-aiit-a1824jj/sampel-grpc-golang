@@ -30,10 +30,21 @@ message CalculatorResponse {
     int64 result_int64 = 2;
 }
 
+message GreetManyTimesRequest{
+    Greeting greeting = 1;
+}
+
+message GreetManytimesResponse {
+    string result = 1;
+}
+
 service GreetService{
     // Unary
     rpc Greet(GreetRequest) returns (GreetResponse){};
 
     // Unary - exercise
     rpc Calculate(CalculatorRequest) returns (CalculatorResponse){};
+
+    // Server Streaming
+    rpc GreetManyTimes(GreetManyTimesRequest) returns (stream GreetManytimesResponse){};
 }
