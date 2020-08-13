@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 
 	"../greetpb"
@@ -20,8 +21,9 @@ func main() {
 	c := greetpb.NewGreetServiceClient(cc)
 	// fmt.Printf("Creted client:%f", c)
 
-	doUnary(c)
-	doUnaryExercise(c)
+	//doUnary(c)
+	//doUnaryExercise(c)
+	doServerStreaming(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -50,4 +52,31 @@ func doUnaryExercise(c greetpb.GreetServiceClient) {
 		log.Fatalf("error while calling Calculate RPC: %v", err)
 	}
 	log.Printf("Response from Calculate: %s", res.Result)
+}
+
+func doServerStreaming(c greetpb.GreetServiceClient) {
+	fmt.Printf("Starting to do a Server Streaming RPC...")
+
+	req := &greetpb.GreetManyTimesRequest{
+		Greeting: &greetpb.Greeting{
+			FirstName: "FirstName",
+			LastName:  "LastName",
+		},
+	}
+	resStream, err := c.GreetManyTimes(context.Background(), req)
+	if err != nil {
+		log.Fatalf("error while calling GreetManyTimes RPC: %v", err)
+	}
+	for {
+		msg, err := resStream.Recv()
+		if err == io.EOF {
+			// we've reached the end of the stream
+			break
+		}
+		if err != nil {
+			log.Fatalf("error while calling GreetManyTimes RPC: %v", err)
+		}
+		log.Printf("Responese from GreetManyTimes: %v\n", msg.GetResult())
+	}
+
 }

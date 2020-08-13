@@ -30,7 +30,7 @@ func (*server) Calculate(ctx context.Context, req *greetpb.CalculatorRequest) (*
 	firstNumber := req.GetCalculator().GetFirstNumber()
 	secondNumber := req.GetCalculator().GetSecondNumber()
 	result := "Calculate -> " + strconv.FormatInt(firstNumber, 10) + " + " + strconv.FormatInt(secondNumber, 10) + " = " + strconv.FormatInt(firstNumber+secondNumber, 10)
-	fmt.Printf("result-> %v", result)
+	fmt.Printf("result-> %v\n", result)
 	res := &greetpb.CalculatorResponse{
 		Result:      result,
 		ResultInt64: firstNumber + secondNumber,
