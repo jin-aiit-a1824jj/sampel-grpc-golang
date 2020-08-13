@@ -46,6 +46,14 @@ message PrimeNumberResponse {
     string result = 1;
 }
 
+message LongGreetRequest {
+    Greeting greeting = 1;
+}
+
+message LongGreetResponse {
+    string result = 1;
+}
+
 service GreetService{
     // Unary
     rpc Greet(GreetRequest) returns (GreetResponse){};
@@ -59,4 +67,6 @@ service GreetService{
     // Server Streaming - exercise
     rpc PrimeNumber(PrimeNumberRequest) returns (stream PrimeNumberResponse){};
 
+    // Client streaming
+    rpc LongGreet(stream LongGreetRequest) returns (LongGreetResponse){};
 }
