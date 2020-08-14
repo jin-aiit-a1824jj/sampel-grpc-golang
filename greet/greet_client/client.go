@@ -18,7 +18,7 @@ import (
 func main() {
 	fmt.Println("Hello I'm a client")
 
-	tls := true
+	tls := false
 	opts := grpc.WithInsecure()
 	if tls {
 		certFile := "ssl/ca.crt" // Certificate Authority Trust certificate
