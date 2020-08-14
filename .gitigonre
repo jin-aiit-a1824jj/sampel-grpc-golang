@@ -14,7 +14,7 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-*.crt
-*.key
-*.csr
-*.pem
+ssl/*.crt
+ssl/*.key
+ssl/*.csr
+ssl/*.pem
