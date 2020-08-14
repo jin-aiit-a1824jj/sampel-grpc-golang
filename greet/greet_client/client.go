@@ -28,7 +28,8 @@ func main() {
 	//doServerStreamingExercise(c)
 	//doClientStreaming(c)
 	//doClientStreamingExercise(c)
-	doBiDiStreaming(c)
+	//doBiDiStreaming(c)
+	doBiDiStreamingExercise(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -231,6 +232,71 @@ func doBiDiStreaming(c greetpb.GreetServiceClient) {
 			Greeting: &greetpb.Greeting{
 				FirstName: "FirstName - 5",
 			},
+		},
+	}
+
+	waitc := make(chan struct{})
+
+	//we send a bunch of message to the client (go routine)
+	go func() {
+		// function to send a bunch of message
+		for _, req := range request {
+			fmt.Printf("Sending message: %v\n", req)
+			stream.Send(req)
+			time.Sleep(1000 * time.Millisecond)
+		}
+		stream.CloseSend()
+	}()
+
+	// we receive a bunch of messsages from the client (go routine)
+	go func() {
+		// function to receive a bunch of message
+		for {
+			res, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("Error while receiving: %v", err)
+				break
+			}
+			fmt.Printf("Received: %v\n", res.GetResult())
+		}
+		close(waitc)
+	}()
+
+	// block until everything is done
+	<-waitc
+}
+
+func doBiDiStreamingExercise(c greetpb.GreetServiceClient) {
+	fmt.Printf("Starting to do a BiDi Streaming Exercise RPC...\n")
+
+	// we create a stream by invoking the client
+	stream, err := c.FindMaximum(context.Background())
+	if err != nil {
+		log.Fatalf("Error while create stream: %v", err)
+		return
+	}
+
+	request := []*greetpb.FindMaximumRequest{
+		&greetpb.FindMaximumRequest{
+			Number: 1,
+		},
+		&greetpb.FindMaximumRequest{
+			Number: 5,
+		},
+		&greetpb.FindMaximumRequest{
+			Number: 3,
+		},
+		&greetpb.FindMaximumRequest{
+			Number: 6,
+		},
+		&greetpb.FindMaximumRequest{
+			Number: 2,
+		},
+		&greetpb.FindMaximumRequest{
+			Number: 20,
 		},
 	}
 

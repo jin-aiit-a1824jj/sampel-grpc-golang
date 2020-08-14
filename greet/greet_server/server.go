@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"sort"
 	"strconv"
 	"time"
 
@@ -129,6 +130,39 @@ func (*server) GreetEveryone(stream greetpb.GreetService_GreetEveryoneServer) er
 		firstName := req.GetGreeting().GetFirstName()
 		result := "Hello " + firstName + "! "
 		sendErr := stream.Send(&greetpb.GreetEveryoneResponse{
+			Result: result,
+		})
+		if sendErr != nil {
+			log.Fatalf("Error while sending data to client: %v", sendErr)
+			return sendErr
+		}
+	}
+}
+
+func (*server) FindMaximum(stream greetpb.GreetService_FindMaximumServer) error {
+	fmt.Println("FindMaximum function was invoked with a streaming request")
+
+	numberSlice := []int{}
+
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("Errorr while reading client stream: %v", err)
+			return err
+		}
+
+		numberSlice = append(numberSlice, int(req.GetNumber()))
+		sort.Slice(numberSlice, func(i, j int) bool {
+			return numberSlice[i] < numberSlice[j]
+		})
+
+		ans := numberSlice[len(numberSlice)-1]
+		result := "FindMaximum [" + strconv.Itoa(ans) + "] "
+		fmt.Println("Send response ->" + result)
+		sendErr := stream.Send(&greetpb.FindMaximumResponse{
 			Result: result,
 		})
 		if sendErr != nil {

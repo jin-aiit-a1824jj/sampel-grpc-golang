@@ -70,6 +70,14 @@ message GreetEveryoneResponse {
     string result = 1;
 }
 
+message FindMaximumRequest {
+    int32 number = 1;
+}
+
+message FindMaximumResponse {
+    string result = 1;
+}
+
 service GreetService{
     // Unary
     rpc Greet(GreetRequest) returns (GreetResponse){};
@@ -91,4 +99,8 @@ service GreetService{
 
     // Bidi Streaming
     rpc GreetEveryone(stream GreetEveryoneRequest) returns (stream GreetEveryoneResponse){};
+
+    // Bidi Streaming - exercise
+    rpc FindMaximum(stream FindMaximumRequest) returns (stream FindMaximumResponse){};
+
 }
