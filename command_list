@@ -30,3 +30,5 @@ call PrimeNumberDecomposition
 call ComputeAverage ( ctrl + d )
 call FindMaximum
 call SquareRoot
+
+protoc blog/blogpb/blog.proto --go_out=plugins=grpc:.
