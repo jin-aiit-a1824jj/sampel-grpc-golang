@@ -32,6 +32,7 @@ type blogItem struct {
 }
 
 func (*server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) (*blogpb.CreateBlogResponse, error){
+	fmt.Printf("Create blog request")
 	blog := req.GetBlog()
 
 	data := blogItem{
