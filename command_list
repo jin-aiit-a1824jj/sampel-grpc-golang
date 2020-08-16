@@ -45,3 +45,12 @@ call SquareRoot
 protoc blog/blogpb/blog.proto --go_out=plugins=grpc:.
 
 go get go.mongodb.org/mongo-driver/mongo
+
+evans -p 5000 -r
+show package
+service BlogService
+call CreateBlog
+call ListBlog
+call DeleteBlog
+call ReadBlog
+call updateBlog
