@@ -73,7 +73,7 @@ func main() {
 	fmt.Println("Connecting to MongoDB")
 
 	// connect to MongoDB
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://172.20.0.20:27012"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://root:root@172.20.0.20:27017/?authSource=admin"))
 	if err != nil {
 		log.Fatal(err)
 	}
