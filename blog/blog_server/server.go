@@ -180,11 +180,11 @@ func (*server) DeleteBlog(ctx context.Context, req *blogpb.DeleteBlogRequest) (*
 func (*server) ListBlog(req *blogpb.ListBlogRequest, stream blogpb.BlogService_ListBlogServer) error {
 	fmt.Println("List blog request")
 
-	cur, err := collection.Find(context.Background(), nil)
+	cur, err := collection.Find(context.Background(), primitive.D{{}})
 	if err != nil{
 		return status.Errorf(
 			codes.Internal,
-			fmt.Sprintf("Unknown internal errorL %v", err),
+			fmt.Sprintf("Unknown internal error %v", err),
 		)
 	}
 	defer cur.Close(context.Background())
@@ -207,7 +207,7 @@ func (*server) ListBlog(req *blogpb.ListBlogRequest, stream blogpb.BlogService_L
 			fmt.Sprintf("Unknown internal errorL %v", err),
 		) 
 	}
-	
+
 	return nil
 }
 
