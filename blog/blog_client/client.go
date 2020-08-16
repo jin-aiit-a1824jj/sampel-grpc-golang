@@ -72,6 +72,15 @@ func main() {
 	if updateErr != nil {
 		fmt.Printf("Error happened while updating: %v \n", updateErr)
 	}
-	fmt.Printf("Blog was read: %v", updateRes)
+	fmt.Printf("Blog was read: %v \n", updateRes)
+
+	// delete Blog
+	fmt.Println("delete the blog")
+	deleteRes, deleteErr := c.DeleteBlog(context.Background(), &blogpb.DeleteBlogRequest{BlogId: blogID})
+
+	if deleteErr != nil {
+		fmt.Printf("Error happened while deleting: %v \n", deleteErr)
+	}
+	fmt.Printf("Blog was deleted: %v \n", deleteRes)
 	
 }
