@@ -107,7 +107,6 @@ func dataToBlogPb(data *blogItem) *blogpb.Blog {
 
 func (*server) UpdateBlog(ctx context.Context, req *blogpb.UpdateBlogRequest) (*blogpb.UpdateBlogResponse, error){
 	fmt.Println("Update blog request")
-	fmt.Println("Update blog request")
 	blog := req.GetBlog()
 	oid, err := primitive.ObjectIDFromHex(blog.GetId())
 	if err != nil {
